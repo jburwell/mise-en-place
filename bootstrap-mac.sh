@@ -11,6 +11,11 @@ MIS_GEMSET=mis
 
 BOOTSTRAP_PACKAGES="git rbenv rbenv-gemset ruby-build"
 
+gi() { 
+  gem install --no-ri --no-rdoc $1
+  rbenv rehash
+}
+
 # Download and install the XCode command line tools required by Homebrew ...
 if [ ! -d $CMD_LINE_TOOLS_HOME ]; then
 
@@ -48,15 +53,15 @@ fi
 echo "Installing bootstrap packages $BOOTSTRAP_PACKAGES"
 brew install $BOOTSTRAP_PACKAGES
 
-echo "Initializing rbenv and installing Ruby version $RUBY_VERSION"
-eval "$(rbenv init -)"
-
 if [ `rbenv versions | grep $RUBY_VERSION | wc -l` -ne 1 ]; then
   rbenv install $RUBY_VERSION
   rbenv rehash
 else 
   echo "Ruby version $RUBY_VERSION is already installed."
 fi
+
+echo "Initializing rbenv and installing Ruby version $RUBY_VERSION"
+eval "$(rbenv init -)"
 
 if [ ! -d $MIS_HOME ]; then
   echo "Pulling mis-en-place from Github into $MIS_HOME"
@@ -70,20 +75,31 @@ else
 fi
 
 echo "Setting the local Ruby version to $RUBY_VERSION in $MIS_HOME and activating the local gemset"
-if [ `rbenv gemset list | grep $MIS_NAME | wc -l` -ne 1]; then
+if [ `rbenv gemset list | grep $MIS_GEMSET | wc -l` -ne 1 ]; then
   rbenv gemset create $RUBY_VERSION $MIS_GEMSET
 fi
 
-if [ -f $MIS_HOME/.rbenv-gemsts ]; then
-  > $MIS_HOME/.rbenv-gemsets <<< $MIS_GEMSET
+if [ ! -f $HOME/.gemrc ] ; then
+  echo "gem: --no-ri --no-rdoc" >> $HOME/.gemrc
 fi
 
-if [ `rbenv local` -eq "rbenv: no local version configured for this directory" ]; then
+if [ ! -f $MIS_HOME/.rbenv-gemsets ]; then
+  echo "$MIS_HOME/.rbenv-gemsets" >> $MIS_GEMSET
+fi
+
+if [ `rbenv local` = "rbenv: no local version configured for this directory" ]; then
   rbenv local $RUBY_VERSION
   rbenv rehash
 fi
 
+# Installing Gems necessary to complete configuration ...
 rbenv-gemset active
+
+if [ `gem list | grep bundler | wc -l` -ne 1 ]; then
+  gi bundler
+fi
+ 
+bundle install
 
 #echo "Running Puppet to perform local configuration"
 #puppet apply config/site.pp --modulepath=config/modules
