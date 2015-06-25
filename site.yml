@@ -1,7 +1,10 @@
 ---
 - hosts: all
+  vars:
+    tmp_dir: ~/tmp
  
   pre_tasks:
+    - file: path={{ tmp_dir }} state=directory mode=0700
     - homebrew_tap: tap=caskroom/versions state=present
  
   roles:
@@ -11,6 +14,7 @@
     - { role: alfred, sudo: yes }
     - { role: comms, sudo: yes}
     - { role: keychain }
+    - { role: iterm2 }
     - { role: tmux }
     - { role: git }
     - { role: java }

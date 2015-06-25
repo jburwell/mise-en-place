@@ -1,0 +1,1 @@
+iterm2_solarized_color_file: "{{ tmp_dir }}/solarized-dark.itermcolors"

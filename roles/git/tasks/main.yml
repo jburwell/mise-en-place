@@ -9,7 +9,8 @@
   homebrew: name=gist state=present
 
 - name: Install kaleidoscope from Homebrew Cask
-  homebrew_cask: name=kaleidoscope state=present  
+  homebrew_cask: name=kaleidoscope state=present
+  sudo: true
 
 - name: Copy .gitignore into ~/
   copy: src=gitignore dest=~/.gitignore

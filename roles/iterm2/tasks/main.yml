@@ -1,0 +1,15 @@
+---
+- name: Install iTerm2 from Homebrew
+  homebrew_cask: name=iterm2 state=present
+  sudo: true
+
+- name: Configure iTerm2 to not prompt on quit
+  shell: defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+- name: Copy Solarized Dark color scheme
+  copy: src=solarized-dark.itermcolors dest={{ iterm2_solarized_color_file }} force=no
+  register: color_scheme
+
+- name: Configure iTerm2 with the Solarized Dark color scheme
+  shell: open {{ iterm2_solarized_color_file }}
+  when: color_scheme|changed
