@@ -60,18 +60,18 @@ brew install $BOOTSTRAP_PACKAGES
 mkdir -p $BREW_CASK_HOME
 echo $SUDO_PASSWORD | sudo -S brew cask help > /dev/null
 
-#if [ ! -d $MISE_HOME ]; then
-#  echo "Cloning mise-en-place $MISE_REPO into $MISE_HOME"
-#  git clone $MISE_REPO $MISE_HOME
-#  echo "Checkout mis-en-place branch $MISE_BRANCH"
-#  cd $MISE_HOME
-#  git checkout -b $MISE_BRANCH
-#else
-#  echo "Updating mise-en-place from Github into $MISE_HOME"
-#  cd $MISE_HOME
-#  git fetch
-#  git rebase
-#fi
+if [ ! -d $MISE_HOME/.git ]; then
+  echo "Cloning mise-en-place $MISE_REPO into $MISE_HOME"
+  git clone $MISE_REPO $MISE_HOME
+  echo "Checkout mis-en-place branch $MISE_BRANCH"
+  cd $MISE_HOME
+  git checkout -b $MISE_BRANCH
+else
+  echo "Updating mise-en-place from Github into $MISE_HOME"
+  cd $MISE_HOME
+  git fetch
+  git rebase
+fi
 
 cd $MISE_HOME
 ansible-playbook -i inventory --connection=local -e homebrew_home=$BREW_HOME -K site.yml
