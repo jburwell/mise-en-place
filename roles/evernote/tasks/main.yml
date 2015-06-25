@@ -1,0 +1,4 @@
+---
+- name: Install Evernote from Homebrew Cask
+  homebrew_cask: name=evernote state=present
+  sudo: true

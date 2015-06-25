@@ -22,3 +22,9 @@
     - { role: emacs }
     - { role: vmware-fusion }
     - { role: vagrant }
+    - { role: evernote }
+    - { role: omnifocus }
+    - { role: omnigraffle }
+    - { role: chrome }
+    - { role: flash }
+    - { role: microsoft-office}

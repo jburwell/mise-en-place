@@ -1,0 +1,4 @@
+---
+- name: Install Microsoft Office from Homebrew Cask
+  homebrew_cask: name=microsoft-office state=present
+  sudo: True

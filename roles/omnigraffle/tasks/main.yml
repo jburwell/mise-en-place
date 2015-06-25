@@ -1,0 +1,4 @@
+---
+- name: Install OmniGraffle from Homebrew Cask
+  homebrew_cask: name=omnigraffle state=present
+  sudo: true

@@ -1,0 +1,4 @@
+---
+- name: Install Adobe Flash from Homebrew Cask
+  homebrew_cask: name=flash state=present
+  sudo: true

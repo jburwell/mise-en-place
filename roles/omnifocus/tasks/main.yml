@@ -1,0 +1,9 @@
+---
+- name: Install OmniFocus from Homebrew Cask
+  homebrew_cask: name=omnifocus state=present
+  sudo: true
+
+- name: Install Omnifocus-Clip-o-Tron from Homebrew Cask
+  homebrew_cask: name=omnifocus-clip-o-tron state=present
+  sudo: true
+
