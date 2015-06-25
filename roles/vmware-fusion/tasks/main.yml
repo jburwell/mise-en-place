@@ -1,0 +1,4 @@
+---
+- name: Install VMWare Fusion
+  homebrew_cask: name=vmware-fusion state=present
+  sudo: true

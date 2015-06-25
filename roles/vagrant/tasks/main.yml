@@ -1,0 +1,4 @@
+---
+- name: Install Vagrant from Homebrew Cask
+  homebrew_cask: name=vagrant state=present
+  sudo: true

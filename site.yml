@@ -20,3 +20,5 @@
     - { role: java }
     - { role: zsh }
     - { role: emacs }
+    - { role: vmware-fusion }
+    - { role: vagrant }
