@@ -1,0 +1,90 @@
+unalias run-help
+autoload run-help
+HELPDIR=/Users/jburwell/.homebrew/share/zsh/helpfiles
+
+# Path to your oh-my-zsh configuration.
+ZSH=$HOME/.oh-my-zsh
+
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="robbyrussell"
+
+# Customize to your needs...
+#export PATH=$PATH:/Library/Java/Home/bin:/Users/jburwell/.rbenv/shims:/Users/jburwell/.homebrew/bin:/Users/jburwell/.homebrew/sbin:/Users/jburwell/.homebrew/share/python:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/MacGPG2/bin:/Users/jburwell/bin:/Users/jburwell/bin/ant/bin
+
+# Homebrew configuration ...
+# BEGIN: Mac specific
+export HOMEBREW_HOME=$HOME/.homebrew
+export PATH=$HOMEBREW_HOME/bin:$HOMEBREW_HOME/sbin:$PATH:$HOME/bin
+export C_INCLUDE_PATH=$HOMEBREW/include
+export CPLUS_INCLUDE_PATH=$HOMEBREW/include
+# END: Mac specific
+
+# Default editor and pager configurations ...
+# TODO Switch to vim ...
+VIM=$(which vim)
+export EDITOR='$VIM -f'
+
+# Erlang configuration ...
+# Disabled for now due to ease use of the Basho custom erlang build ...
+# . /Users/jburwell/.kerl/runtimes/r16b01/activate
+export PATH=$HOME/bin/erlang-R16B02-basho7/bin:$PATH
+
+# virtualenvwrapper setup
+export WORK_ON_HOME=$HOME/.python/envs
+#. /usr/local/bin/virtualenvwrapper.sh
+
+# Java configuration
+# BEGIN: Mac specific
+JAVA_HOME=$(/usr/libexec/java_home)
+# END: Mac specific
+export PATH=$JAVA_HOME/bin:$PATH
+
+# Ant configuration
+export ANT_HOME=$HOME/bin/ant
+export PATH=$PATH:$ANT_HOME/bin
+
+# Maven configuration
+export MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=256m"
+
+# Git configuration
+# TODO Switch to Vim ...
+export GIT_EDITOR="$VIM -f -c 'startinsert'"
+
+# Alias definitions ...
+alias grep='grep --color=auto'
+# BEGIN: Mac specific
+alias ls='ls -G'
+alias ll='ls -alFG'
+# END: Mac specific
+alias bower='noglob bower'
+
+# BEGIN: Mac specific
+ZSH_TMUX_ITERM2=true
+# END: Mac specific
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(git ruby mvn gradle rbenv rake ant python virtualenvwrapper tmux rebar osx bower brew git-flow pip vagrant lein rebar sudo)
+
+source $ZSH/oh-my-zsh.sh
+
+# TODO Create an on-my-zsh plugin ...
+# BEGIN: Mac specific
+#export LESSOPEN="| ~/.homebrew/bin/src-hilite-lesspipe.sh %s"
+#export LESSOPEN="| pygmentize -f terminal %s |"
+# END: Mac specific
+export LESS=' -R '
+
+# SSH key setup ...
+for KEY_FILE in $HOME/.ssh/*.ssh
+do
+  keychain $KEY_FILE
+done
+
+source $HOME/.keychain/$HOST-sh
+
+ulimit -n 10000

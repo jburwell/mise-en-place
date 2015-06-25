@@ -1,0 +1,19 @@
+---
+- name: Enable Tap Clicking for the Trackpad
+  shell: defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+  sudo: true
+
+- name: Enable Tap Clicking for a mouse on current
+  shell: defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+  sudo: true
+
+- name: Enable Tap Clicking for a mouse
+  shell: defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+  sudo: true
+
+- name: Fix scroll direction
+  shell: defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+  sudo: true
+
+- name: Restart Finder
+  shell: killall -9 Finder

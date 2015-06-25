@@ -1,0 +1,2 @@
+---
+- homebrew_cask: name=dropbox state=present

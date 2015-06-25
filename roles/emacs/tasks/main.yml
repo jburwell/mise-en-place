@@ -1,0 +1,21 @@
+---
+- name: Install Emacs
+  homebrew: name=emacs state=present
+
+- name: Install Cask
+  homebrew: name=cask state=present
+
+- name: Create the ~/.emacs.d  directory
+  file: path={{ emacs_conf_dir }} state=directory
+
+- name: Copy init.el to ~/.emacs.d
+  copy: src=init.el dest={{ emacs_conf_dir }}/init.el
+
+- name: Copy Cask configuration to ~/.emacs.d
+  copy: src=Cask dest={{ emacs_conf_dir }}/Cask
+
+- name: Copy customizations to ~/.emacs.d
+  copy: src=customizations dest={{ emacs_conf_dir }}/customizations directory_mode
+
+- name: Install Emacs packages using Cask
+  shell: chdir={{ emacs_conf_dir }} cask install

@@ -1,0 +1,3 @@
+---
+- name: Install keychain
+  homebrew: name=keychain state=present

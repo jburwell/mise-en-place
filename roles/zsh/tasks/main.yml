@@ -1,0 +1,27 @@
+---
+- name: Install zsh from Homebrew
+  homebrew:
+    name: zsh
+    state: present
+
+- name: Add Homebrew's Zsh to available shells
+  sudo: yes
+  lineinfile:
+    dest: /etc/shells
+    line: "{{ homebrew_home }}/bin/zsh"
+
+- name: Install oh-my-zsh
+  git: repo=https://github.com/robbyrussell/oh-my-zsh dest={{ zsh_on_my_zsh_home }}
+
+- name: Copy .zshrc to ~/
+  copy: src=zshrc dest=~/.zshrc
+
+- name: Check if Homebrew's Zsh is already the default shell (will require a restart)
+  shell: echo $SHELL
+  register: shell_name
+  changed_when: shell_name.stdout != '{{ homebrew_home }}/bin/zsh'
+
+- name: Make Homebrew's Zsh default shell for this user
+  shell: chsh -s {{ homebrew_home }}/bin/zsh
+  when: shell_name|changed
+

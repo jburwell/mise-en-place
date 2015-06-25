@@ -1,106 +1,79 @@
-#/bin/bash
+#!/bin/bash
+
+INITIAL_DIR="$(pwd)"
+
+# Bail on error ...
+set -e
 
 # TODO Add command line options for the mis-en-place repo URL, mis-en-place home directory, Homebrew home directory, Ruby version, and repo branch
 
-CMD_LINE_TOOLS_HOME="/usr/llvm-gcc-4.2"
-BREW_HOME=$HOME/.homebrew
-MIS_HOME=$HOME/.mis
+echo -n "Sudo password: "
+read -s SUDO_PASSWORD
+echo
 
-RUBY_VERSION=1.9.3-p194
-MIS_GEMSET=mis
+BREW_HOME="$HOME/.homebrew"
+BREW_CASK_HOME="$HOME/.brew-cask"
 
-BOOTSTRAP_PACKAGES="git rbenv rbenv-gemset ruby-build"
+MISE_HOME="$HOME/.mise"
+MISE_REPO="git@github.com:jburwell/mis-en-place.git"
+MISE_BRANCH="master"
 
-gi() { 
-  gem install --no-ri --no-rdoc $1
-  rbenv rehash
-}
+BOOTSTRAP_PACKAGES="git ansible caskroom/cask/brew-cask"
 
 # Download and install the XCode command line tools required by Homebrew ...
-if [ ! -d $CMD_LINE_TOOLS_HOME ]; then
+if [ ! "$(xcode-select --print-path 2>/dev/null)" ]; then
+  echo $SUDO_PASSWORD | sudo -S /usr/bin/xcode-select --install 2>/dev/null
+  sleep 1
+  osascript <<EOD
+    tell application "System Events"
+      tell process "Install Command Line Developer Tools"
+        keystroke return
+        click button "Agree" of window "License Agreement"
+      end tell
+    end tell
+EOD
 
-  WORK_DIR=`mktemp -d $HOME/mies-work.XXXXXX`
+  while true; do
+    sleep 5
 
-  echo "Downloading the XCode command line tools to $WORK_DIR"
-  $CMD_LINE_TOOLS=$WORK_DIR/xcode_command_line_tools.dmg
-  curl -o $CMD_LINE_TOOLS http://dl.dropbox.com/u/3254149/command_line_tools_for_xcode_june_2012.dmg
-
-  echo "Installing XCode command line tools from $CMD_LINE_TOOLS"
-  hdiutil attach $CMD_LINE_TOOLS
-  cd /Volumes/Command\ Line\ Tools/Packages
-  sudo /usr/sbin/installer -pkg DeveloperToolsCLI.pkg -target /
-  hdiutil detach $CMD_LINE_TOOLS
-  
-  rm -rf $WORK_DIR
-
+    if [ -n "$(xcode-select --print-path 2>/dev/null)" ]; then
+      break;
+    fi
+  done
 else
-  echo "The XCode Command Line tools are already installed in $CMD_LINE_TOOLS_HOME"
+  echo "The XCode Command Line tools are already installed in $(xcode-select --print-path)"
 fi
 
-echo "Configuring the PATH for Homebrew and rbenv"
-PATH=$HOME/.rbenv/bin:$BREW_HOME/bin:$PATH
-
+export PATH=$BREW_HOME/bin:$PATH
 if [ ! -d $BREW_HOME ]; then
   echo "Installing Homebrew into $BREW_HOME"
   mkdir -p $BREW_HOME
   curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $BREW_HOME
-else
-  echo "Homebrew is already installed in $BREW_HOME.  Performing an upgrade."
   brew update
-  brew upgrade
+else
+  echo "Homebrew is already installed in $BREW_HOME."
 fi
 
-echo "Installing bootstrap packages $BOOTSTRAP_PACKAGES"
 brew install $BOOTSTRAP_PACKAGES
 
-if [ `rbenv versions | grep $RUBY_VERSION | wc -l` -ne 1 ]; then
-  rbenv install $RUBY_VERSION
-  rbenv rehash
-else 
-  echo "Ruby version $RUBY_VERSION is already installed."
-fi
+# Force initialization of Caskroom ...
+mkdir -p $BREW_CASK_HOME
+echo $SUDO_PASSWORD | sudo -S brew cask help > /dev/null
 
-echo "Initializing rbenv and installing Ruby version $RUBY_VERSION"
-eval "$(rbenv init -)"
+#if [ ! -d $MISE_HOME ]; then
+#  echo "Cloning mise-en-place $MISE_REPO into $MISE_HOME"
+#  git clone $MISE_REPO $MISE_HOME
+#  echo "Checkout mis-en-place branch $MISE_BRANCH"
+#  cd $MISE_HOME
+#  git checkout -b $MISE_BRANCH
+#else
+#  echo "Updating mise-en-place from Github into $MISE_HOME"
+#  cd $MISE_HOME
+#  git fetch
+#  git rebase
+#fi
 
-if [ ! -d $MIS_HOME ]; then
-  echo "Pulling mis-en-place from Github into $MIS_HOME"
-  mkdir -p $MIS_HOME
-  cd $MIS_HOME
-  git clone git://github.com/jburwell/mis-en-place.git $MIS_HOME
-else
-  echo "Updating mis-en-place from Github into $MIS_HOME"
-  cd $MIS_HOME
-  git pull
-fi
+cd $MISE_HOME
+ansible-playbook -i inventory --connection=local -e homebrew_home=$BREW_HOME -K site.yml
 
-echo "Setting the local Ruby version to $RUBY_VERSION in $MIS_HOME and activating the local gemset"
-if [ `rbenv gemset list | grep $MIS_GEMSET | wc -l` -ne 1 ]; then
-  rbenv gemset create $RUBY_VERSION $MIS_GEMSET
-fi
-
-if [ ! -f $HOME/.gemrc ] ; then
-  echo "gem: --no-ri --no-rdoc" >> $HOME/.gemrc
-fi
-
-if [ ! -f $MIS_HOME/.rbenv-gemsets ]; then
-  echo "$MIS_HOME/.rbenv-gemsets" >> $MIS_GEMSET
-fi
-
-if [ `rbenv local` = "rbenv: no local version configured for this directory" ]; then
-  rbenv local $RUBY_VERSION
-  rbenv rehash
-fi
-
-# Installing Gems necessary to complete configuration ...
-rbenv-gemset active
-
-if [ `gem list | grep bundler | wc -l` -ne 1 ]; then
-  gi bundler
-fi
- 
-bundle install
-
-#echo "Running Puppet to perform local configuration"
-#puppet apply config/site.pp --modulepath=config/modules
-
+cd $INITIAL_DIR

@@ -1,0 +1,18 @@
+---
+- name: Install Java8
+  homebrew_cask: name=java state=present
+  sudo: true
+
+- name: Install Java7
+  homebrew_cask: name=java7 state=present
+  sudo: true
+
+- name: Install Maven
+  homebrew: name=maven state=present
+
+- name: Install Gradle
+  homebrew: name=gradle state=present
+
+- name: Install IntelliJ
+  homebrew_cask: name=intellij-idea-ce state=present
+  sudo: true

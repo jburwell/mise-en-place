@@ -1,0 +1,18 @@
+---
+- hosts: all
+ 
+  pre_tasks:
+    - homebrew_tap: tap=caskroom/versions state=present
+ 
+  roles:
+    - { role: finder }
+    - { role: dropbox, sudo: yes }
+    - { role: 1password, sudo: yes }
+    - { role: alfred, sudo: yes }
+    - { role: comms, sudo: yes}
+    - { role: keychain }
+    - { role: tmux }
+    - { role: git }
+    - { role: java }
+    - { role: zsh }
+    - { role: emacs }

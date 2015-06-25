@@ -1,0 +1,6 @@
+---
+- name: Install tmux
+  homebrew: name=tmux state=present
+
+- name: Copy tmux.conf into ~/
+  copy: src=tmux.conf dest=~/.tmux.conf
