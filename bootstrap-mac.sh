@@ -65,7 +65,7 @@ if [ ! -d $MISE_HOME/.git ]; then
   git clone $MISE_REPO $MISE_HOME
   echo "Checkout mis-en-place branch $MISE_BRANCH"
   cd $MISE_HOME
-  git checkout -b $MISE_BRANCH
+  git checkout $MISE_BRANCH
 else
   echo "Updating mise-en-place from Github into $MISE_HOME"
   cd $MISE_HOME
