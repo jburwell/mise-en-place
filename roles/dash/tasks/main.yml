@@ -1,0 +1,5 @@
+---
+- name: Install Dash
+  homebrew_cask: name=dash state=present
+  sudo: true
+

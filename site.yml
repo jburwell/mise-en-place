@@ -5,6 +5,8 @@
  
   pre_tasks:
     - file: path={{ tmp_dir }} state=directory mode=0700
+    - file: path=~/.ssh state=directory mode=0700
+    - file: path=~/Documents/projects state=directory mode=0700
     - homebrew_tap: tap=caskroom/versions state=present
  
   roles:
@@ -18,6 +20,7 @@
     - { role: tmux }
     - { role: git }
     - { role: java }
+    - { role: dash }
     - { role: zsh }
     - { role: emacs }
     - { role: vmware-fusion }
