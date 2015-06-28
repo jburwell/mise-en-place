@@ -31,3 +31,4 @@
     - { role: chrome }
     - { role: flash }
     - { role: microsoft-office}
+    - { role: xhyve }
