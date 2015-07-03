@@ -1,0 +1,14 @@
+---
+- name: Install gpg2 from Homebrew
+  homebrew: name=gpg2 state=present
+
+- name: Install gpg-agent from Homebrew
+  homebrew: name=gpg-agent state=present
+
+- name: Install gpgtools from Homebrew Cask
+  homebrew_cask: name=gpgtools state=present
+  sudo: true
+
+- name: Install the keybase client from Homebrew
+  homebrew: name=keybase state=present
+

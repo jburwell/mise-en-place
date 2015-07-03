@@ -1,0 +1,4 @@
+---
+- name: Install Spotify from Homebrew Cask
+  homebrew_cask: name=spotify state=present
+  sudo: true

@@ -15,5 +15,64 @@
   shell: defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
   sudo: true
 
+- name: Expand save panel by default 1
+  shell: defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+
+- name: Expand save panel by default 2
+  shell: defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+
+- name: Expand save panel by default 3
+  shell: defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+- name: Save to disk rather than iCloud by default
+  shell: defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
+- name: Reveal additional system details when clicking the clock on the login screen
+  shell: defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+  sudo: true
+
+- name: Disable sudden motion sensor (pointless with an SSD or Flash storage)
+  shell: pmset -a sms 0
+  sudo: true
+
+- name: Disable menubar transperancy
+  shell: defaults write com.apple.universalaccess reduceTransparency -bool true
+
+- name: Enable full keyboard access for all controls
+  shell: defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+- name: Disable autocorrect
+  shell: defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+- name: Set screenshot format to PNG
+  shell: defaults write com.apple.screencapture type -string "png"
+
+- name: Show icons for hard drives, servers, and removable media on the desktop
+  shell: defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+
+- name: Show file extensions in Finder
+  shell: defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+- name: Show status bar in Finder
+  shell: defaults write com.apple.finder ShowStatusBar -bool true
+
+- name: Display full POSIX path as Finder window title
+  shell: defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+
+- name: Disable warning when changing file extension
+  shell: defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+- name: Default to column view in Finder
+  shell: defaults write com.apple.finder FXPreferredViewStyle Clmv
+
+- name: Avoid creation of .DS_Store files on network volumes
+  shell: defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+- name: Enable test selection in Quick Look windows
+  shell: defaults write com.apple.finder QLEnableTextSelection -bool true
+
+- name: Enable repeating keys
+  shell: defaults write -g ApplePressAndHoldEnabled 0
+
 - name: Restart Finder
   shell: killall -9 Finder
