@@ -37,9 +37,8 @@ export WORK_ON_HOME=$HOME/.python/envs
 #. /usr/local/bin/virtualenvwrapper.sh
 
 # Java configuration
-# BEGIN: Mac specific
-JAVA_HOME=$(/usr/libexec/java_home)
-# END: Mac specific
+export IDEA_JDK="$(/usr/libexec/java_home -v 1.6)"
+export JAVA_HOME="$(/usr/libexec/java_home -v 1.7)"
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Ant configuration
@@ -65,12 +64,14 @@ alias bower='noglob bower'
 ZSH_TMUX_ITERM2=true
 # END: Mac specific
 
+export VAGRANT_VMWARE_FUSION_APP="/opt/homebrew-cask/Caskroom/vmware-fusion/7.1.2-2779224/VMware Fusion.app"
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git ruby mvn gradle rbenv rake ant python virtualenvwrapper tmux rebar osx bower brew git-flow pip vagrant lein rebar sudo)
 
-source $ZSH/oh-my-zsh.sh
+. $ZSH/oh-my-zsh.sh
 
 # TODO Create an on-my-zsh plugin ...
 # BEGIN: Mac specific

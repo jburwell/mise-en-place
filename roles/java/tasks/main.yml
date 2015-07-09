@@ -7,6 +7,10 @@
   homebrew_cask: name=java7 state=present
   sudo: true
 
+- name: Install Java6 (needed by IntelliJ)
+  homebrew_cask: name=java6 state=present
+  sudo: true
+
 - name: Install Maven
   homebrew: name=maven state=present
 

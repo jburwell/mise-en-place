@@ -16,6 +16,9 @@
 - name: Copy .zshrc to ~/
   copy: src=zshrc dest=~/.zshrc
 
+- name: Copy .profile to ~/
+  copy: src=profile dest=~/.profile
+
 - name: Check if Homebrew's Zsh is already the default shell (will require a restart)
   shell: echo $SHELL
   register: shell_name
