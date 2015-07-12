@@ -1,0 +1,12 @@
+---
+- name: Install vim from Homebrew
+  homebrew: name=vim state=present
+
+- name: Copy vimrc into ~
+  copy: src=vimrc dest=~/.vimrc
+
+- name: Create vim autoload directory
+  file: path={{ vim_autoload_dir }} state=directory mode=0700
+
+- name: Install pathogen
+  get_url: url=https://tpo.pe/pathogen.vim dest={{ vim_autoload_dir }}

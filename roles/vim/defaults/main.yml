@@ -1,0 +1,3 @@
+---
+vim_dir: "~/.vim"
+vim_autoload_dir: "{{ vim_dir }}/autoload"

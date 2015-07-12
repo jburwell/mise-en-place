@@ -1,0 +1,22 @@
+syntax on
+
+set list listchars=tab:▷⋅,trail:⋅,nbsp:⋅
+"set statusline=%F%m%r%h%w\ [TYPE=%Y\ %{&ff}]\ \ [%l/%L\ (%p%%)
+"set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
+set ruler
+set number
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set backspace=indent,eol,start
+
+" Mac clipboard integration -- http://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
+set clipboard=unnamed
+
+set guifont=Menlo\ Regular:h14
+
+filetype plugin indent on
+
+call pathogen#infect()
+call pathogen#helptags()
+
