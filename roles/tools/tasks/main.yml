@@ -1,0 +1,6 @@
+---
+- name: Install nmap and htop
+  homebrew: name={{ item }} state=present
+  with_items:
+    - "htop"
+    - "nmap"

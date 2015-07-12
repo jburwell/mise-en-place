@@ -33,3 +33,4 @@
     - { role: microsoft-office}
     - { role: xhyve }
     - { role: spotify }
+    - { role: tools }
