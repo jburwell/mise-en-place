@@ -1,0 +1,30 @@
+---
+- name: Install system-wide pip
+  shell: easy_install pip
+  sudo: true
+
+- name: Install pyenv and pyenv-virtualenv
+  homebrew: name={{ item }} state=present
+  with_items:
+    - "pyenv"
+    - "pyenv-virtualenv"
+    - "homebrew/boneyard/pyenv-pip-rehash"
+
+- name: Install the latest Python 2.6.x, 2.7.x, and 3.x.x into pyenv
+  shell: eval $(pyenv init) && pyenv install {{ item }}
+  with_items:
+    - "2.6.8"
+    - "2.7.10"
+    - "3.4.3"
+
+- name: Install Python tools (autopep8, pep8, ipython, etc)
+  shell: eval $(pyenv init) && pip install {{ item }}
+  sudo: true
+  with_items:
+    - "autopep8"
+    - "pep8"
+    - "ipython"
+
+- name: Install Pycharm
+  homebrew_cask: name=pycharm-ce state=present
+  sudo: true

@@ -20,6 +20,7 @@
     - { role: tmux }
     - { role: git }
     - { role: java }
+#    - { role: python }
     - { role: dash }
     - { role: zsh }
     - { role: vim }

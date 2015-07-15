@@ -46,7 +46,7 @@ export ANT_HOME=$HOME/bin/ant
 export PATH=$PATH:$ANT_HOME/bin
 
 # Maven configuration
-export MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=256m"
+export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=500m -Djava.net.preferIPv4Stack=true"
 
 # Git configuration
 # TODO Switch to Vim ...
