@@ -59,6 +59,7 @@ alias ls='ls -G'
 alias ll='ls -alFG'
 # END: Mac specific
 alias bower='noglob bower'
+alias diff='colordiff'
 
 # BEGIN: Mac specific
 ZSH_TMUX_ITERM2=true
