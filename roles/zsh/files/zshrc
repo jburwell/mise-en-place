@@ -1,6 +1,10 @@
+# BEGIN: Mac specific
+export HOMEBREW_HOME=$HOME/.homebrew
+
 unalias run-help
 autoload run-help
-HELPDIR=/Users/jburwell/.homebrew/share/zsh/helpfiles
+HELPDIR=$HOMEBREW_HOME/share/zsh/helpfiles
+# END: Mac specific
 
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
@@ -9,14 +13,13 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
+#ZSH_THEME="robbyrussell"
+ZSH_THEME="burwellian"
 
 # Customize to your needs...
 #export PATH=$PATH:/Library/Java/Home/bin:/Users/jburwell/.rbenv/shims:/Users/jburwell/.homebrew/bin:/Users/jburwell/.homebrew/sbin:/Users/jburwell/.homebrew/share/python:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/MacGPG2/bin:/Users/jburwell/bin:/Users/jburwell/bin/ant/bin
 
-# Homebrew configuration ...
 # BEGIN: Mac specific
-export HOMEBREW_HOME=$HOME/.homebrew
 export PATH=$HOMEBREW_HOME/bin:$HOMEBREW_HOME/sbin:$PATH:$HOME/bin
 export C_INCLUDE_PATH=$HOMEBREW/include
 export CPLUS_INCLUDE_PATH=$HOMEBREW/include
@@ -31,10 +34,6 @@ export EDITOR='$VIM -f'
 # Disabled for now due to ease use of the Basho custom erlang build ...
 # . /Users/jburwell/.kerl/runtimes/r16b01/activate
 export PATH=$HOME/bin/erlang-R16B02-basho7/bin:$PATH
-
-# virtualenvwrapper setup
-export WORK_ON_HOME=$HOME/.python/envs
-#. /usr/local/bin/virtualenvwrapper.sh
 
 # Java configuration
 export IDEA_JDK="$(/usr/libexec/java_home -v 1.6)"
@@ -65,12 +64,13 @@ alias diff='colordiff'
 ZSH_TMUX_ITERM2=true
 # END: Mac specific
 
+export VAGRANT_DEFAULT_PROVIDER=vmware_fusion
 export VAGRANT_VMWARE_FUSION_APP="/opt/homebrew-cask/Caskroom/vmware-fusion/7.1.2-2779224/VMware Fusion.app"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby mvn gradle rbenv rake ant python virtualenvwrapper tmux rebar osx bower brew git-flow pip vagrant lein rebar sudo)
+plugins=(git ruby mvn gradle rbenv rake ant python tmux rebar osx bower brew git-flow pip vagrant lein rebar sudo pyenv jenv)
 
 . $ZSH/oh-my-zsh.sh
 
