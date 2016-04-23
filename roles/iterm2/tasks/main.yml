@@ -1,13 +1,23 @@
 ---
-- name: Install iTerm2 from Homebrew
-  homebrew_cask: name=iterm2 state=present
+- name: Install iTerm2 and Inconsolata from Homebrew
+  homebrew_cask:
+    name: "{{ item }}"
+    state: present
   sudo: true
+  with_items:
+    - iterm2
+    - font-inconsolata
 
 - name: Configure iTerm2 to not prompt on quit
   shell: defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
+# Configure font -> Inconsolata 14
+
 - name: Copy Solarized Dark color scheme
-  copy: src=solarized-dark.itermcolors dest={{ iterm2_solarized_color_file }} force=no
+  copy:
+    src: solarized-dark.itermcolors
+    dest: "{{ iterm2_solarized_color_file }}"
+    force: no
   register: color_scheme
 
 - name: Configure iTerm2 with the Solarized Dark color scheme
