@@ -1,23 +1,38 @@
 ---
 - name: Install Emacs
-  homebrew: name=emacs state=present
+  homebrew:
+    name: emacs
+    state: present
 
 - name: Install Cask
-  homebrew: name=cask state=present
+  homebrew: 
+    name: cask
+    state: present
 
 - name: Create the ~/.emacs.d  directory
-  file: path={{ emacs_conf_dir }} state=directory
+  file:
+    path: "{{ emacs_conf_dir }}" 
+    state: directory
 
 - name: Copy init.el to ~/.emacs.d
-  copy: src=init.el dest={{ emacs_conf_dir }}/init.el
+  copy:
+    src: init.el
+    dest: "{{ emacs_conf_dir }}/init.el"
 
 - name: Copy customizations to ~/.emacs.d
-  copy: src=customizations dest={{ emacs_conf_dir }}/customizations directory_mode
+  copy:
+    src: customizations
+    dest: "{{ emacs_conf_dir }}/customizations"
+    directory_mode: yes
 
 - name: Copy Cask configuration to ~/.emacs.d
-  copy: src=Cask dest={{ emacs_conf_dir }}/Cask
+  copy:
+    src: Cask
+    dest: "{{ emacs_conf_dir }}/Cask"
   register: cask_file
 
 - name: Install Emacs packages using Cask
-  shell: chdir={{ emacs_conf_dir }} cask install
+  shell: cask install
+  args:
+    chdir: "{{ emacs_conf_dir }}"
   when: cask_file|changed
