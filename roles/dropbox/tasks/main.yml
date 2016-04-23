@@ -1,2 +1,4 @@
 ---
-- homebrew_cask: name=dropbox state=present
+- homebrew_cask:
+    name: dropbox
+    state: present
