@@ -6,6 +6,7 @@
   with_items:
     - zsh
     - colordiff
+    - z
 
 - name: Add Homebrew's Zsh to available shells
   sudo: yes
@@ -13,10 +14,19 @@
     dest: /etc/shells
     line: "{{ homebrew_home }}/bin/zsh"
 
+- name: Grab the oh-my-zsh directory stats
+  stat:
+    path: "{{ zsh_on_my_zsh_home }}"
+  register: st
+
 - name: Install oh-my-zsh
   git: 
     repo: "https://github.com/robbyrussell/oh-my-zsh" 
     dest: "{{ zsh_on_my_zsh_home }}"
+  when: not st.stat.exists
+
+- name: Install Pygments for colorization
+  shell: eval $(pyenv init) && pip install Pygments
 
 - name: Copy .zshrc to ~/
   copy: 
