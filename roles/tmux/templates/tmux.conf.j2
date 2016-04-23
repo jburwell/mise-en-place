@@ -22,10 +22,7 @@ set -g history-limit 10000
 setw -g mode-keys vi
 setw -g monitor-activity on
 
-# Configure mouse support -- http://montanaflynn.me/tag/iterm2/
-setw -g mode-mouse on
-set -g mouse-select-pane on
-set -g mouse-select-window on
+set -g mouse on
 
 bind-key v split-window -h
 bind-key s split-window -v
@@ -54,13 +51,13 @@ bind ] run "reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux past
 
 # Vim style pane selection
 bind h select-pane -L
-bind j select-pane -D 
+bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
 
 # Use Alt-vim keys without prefix key to switch panes
 bind -n M-h select-pane -L
-bind -n M-j select-pane -D 
+bind -n M-j select-pane -D
 bind -n M-k select-pane -U
 bind -n M-l select-pane -R
 
@@ -114,4 +111,12 @@ set-option -g display-panes-active-colour blue #blue
 set-option -g display-panes-colour brightred #orange
 
 # clock
-set-window-option -g clock-mode-colour green #green
+#set-window-option -g clock-mode-colour green #green
+
+set -g status-right 'Batt: #{battery_icon} #{battery_percentage} #{battery_remain} | %a %h-%d %H:%M '
+
+{% for plugin in tmux_plugins %}
+set -g @plugin '{{ plugin }}'
+{% endfor %}
+
+run '{{ tmux_tpm_dir }}/tpm'

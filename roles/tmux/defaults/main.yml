@@ -1,0 +1,10 @@
+---
+tmux_root_dir: ~/.tmux
+tmux_plugin_dir: "{{ tmux_root_dir}}/plugins"
+tmux_tpm_dir: "{{ tmux_plugin_dir }}/tpm"
+
+tmux_plugins:
+  - tmux-plugins/tpm
+  - tmux-plugins/tmux-battery
+  - tmux-plugins/tmux-resurrect
+

@@ -5,5 +5,27 @@
     - "tmux"
     - "reattach-to-user-namespace"
 
+- name: Create the tmux plugin directory
+  file:
+    path: "{{ tmux_plugin_dir }}"
+    state: directory
+
+- name: Grab stats of the Tmux Plugin Manager directory
+  stat:
+    path: "{{ tmux_tpm_dir }}"
+  register: tmux_tpm_dir_st
+
+- name: Install Tmux Plugin Manager
+  git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "{{ tmux_tpm_dir }}"
+  when: tmux_tpm_dir_st.stat.isdir is not defined
+
 - name: Copy tmux.conf into ~/
-  copy: src=tmux.conf dest=~/.tmux.conf
+  template:
+    src: tmux.conf.j2
+    dest: ~/.tmux.conf
+
+- name: Install tmux plugins
+  shell: "{{ tmux_tpm_dir}}/bin/install_plugins"
+
