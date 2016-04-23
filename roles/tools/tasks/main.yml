@@ -2,5 +2,9 @@
 - name: Install nmap and htop
   homebrew: name={{ item }} state=present
   with_items:
-    - "htop"
+    - "htop-osx"
+    - "ncdu"
     - "nmap"
+
+- name: Install pydf
+  shell: eval $(pyenv install) && pip install pydf
