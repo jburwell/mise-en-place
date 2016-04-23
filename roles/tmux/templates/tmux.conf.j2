@@ -113,7 +113,7 @@ set-option -g display-panes-colour brightred #orange
 # clock
 #set-window-option -g clock-mode-colour green #green
 
-set -g status-right 'Batt: #{battery_icon} #{battery_percentage} #{battery_remain} | %a %h-%d %H:%M '
+set -g status-right 'Batt: #{battery_icon} #{battery_percentage} (#{battery_remain}) | %d.%h.%y | %H:%M '
 
 {% for plugin in tmux_plugins %}
 set -g @plugin '{{ plugin }}'
