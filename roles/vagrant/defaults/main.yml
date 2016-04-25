@@ -1,0 +1,5 @@
+---
+polipo_cache_dir: "~/.polipo-cache"
+polipo_bind_address: "localhost"
+polipo_bind_port: 8123
+

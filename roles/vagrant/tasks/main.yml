@@ -1,4 +1,27 @@
 ---
 - name: Install Vagrant from Homebrew Cask
-  homebrew_cask: name=vagrant state=present
+  homebrew_cask:
+    name: vagrant
+    state: present
   sudo: true
+
+- name: Install vagrant plugins
+  shell: vagrant plugin install {{ item }}
+  with_items:
+    - vagrant-cachier
+    - vagrant-berkshelf
+    - vagrant-omnibus
+    - vagrant-aws
+    - vagrant-cloudstack
+    - vagrant-vmware-fusion
+
+- name: Create Vagrant and Polipo directories
+  file:
+    path: "~/vagrant.d"
+    state: directory
+
+- name: Configure Vagrant
+  template:
+    src: Vagrantfile.j2
+    dest: ~/vagrant.d/Vagrantfile
+
