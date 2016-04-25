@@ -1,5 +1,6 @@
 # BEGIN: Mac specific
 export HOMEBREW_HOME=$HOME/.homebrew
+export HOMEBREW_NO_ANALYTICS=1
 
 unalias run-help
 autoload run-help
@@ -37,7 +38,6 @@ export PATH=$HOME/bin/erlang-R16B02-basho7/bin:$PATH
 
 # Java configuration
 export IDEA_JDK="$(/usr/libexec/java_home -v 1.6)"
-export JAVA_HOME="$(/usr/libexec/java_home -v 1.7)"
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Ant configuration
@@ -57,7 +57,6 @@ alias grep='grep --color=auto'
 alias ls='ls -G'
 alias ll='ls -alFG'
 # END: Mac specific
-alias bower='noglob bower'
 alias diff='colordiff'
 
 # BEGIN: Mac specific
