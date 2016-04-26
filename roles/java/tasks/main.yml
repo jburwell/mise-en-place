@@ -1,22 +1,41 @@
 ---
-- name: Install Java8
-  homebrew_cask: name=java state=present
+- name: Install Java6, Java7, and Java8
+  homebrew_cask:
+    name: "{{ item }}"
+    state: present
   sudo: true
+  with_items:
+    - java6
+    - java7
+    - java
 
-- name: Install Java7
-  homebrew_cask: name=java7 state=present
+- name: Install jenv, Gradle, and Maven
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - jenv
+    - gradle
+    - maven
+
+- name: Create .gradle directory
+  file: 
+    path: ~/.gradle
+    state: directory
+
+- name: Enable the Gradle daemon
+  lineinfile:
+    dest: ~/.gradle/gradle.properties
+    line: org.gradle.daemon=true
+    create: true
+    state: present
+
+- name: Install IntelliJ and Java Decompiler
+  homebrew_cask:
+    name: "{{ item }}"
+    state: present
   sudo: true
+  with_items:
+    - intellij-idea-ce
+    - jd-gui
 
-- name: Install Java6 (needed by IntelliJ)
-  homebrew_cask: name=java6 state=present
-  sudo: true
-
-- name: Install Maven
-  homebrew: name=maven state=present
-
-- name: Install Gradle
-  homebrew: name=gradle state=present
-
-- name: Install IntelliJ
-  homebrew_cask: name=intellij-idea-ce state=present
-  sudo: true
