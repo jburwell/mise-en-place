@@ -1,2 +1,6 @@
-zsh_on_my_zsh_home: ~/.oh-my-zsh
+zsh_oh_my_zsh_home: ~/.oh-my-zsh
 zsh_oh_my_zsh_theme: robbyrussell
+zsh_oh_my_zsh_repo_url: "https://github.com/robbyrussell/oh-my-zsh"
+
+zsh_syntax_highlighting_plugin_home: "{{ zsh_oh_my_zsh_home }}/custom/plugins/zsh-syntax-highlighting"
+zsh_syntax_highlighting_plugin_repo_url: "https://github.com/zsh-users/zsh-syntax-highlighting.git"

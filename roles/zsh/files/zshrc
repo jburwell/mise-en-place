@@ -73,7 +73,7 @@ export VAGRANT_VMWARE_FUSION_APP="/opt/homebrew-cask/Caskroom/vmware-fusion/8.1.
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby mvn gradle rbenv rake ant python rebar osx brew git-flow pip vagrant lein rebar sudo pyenv jenv)
+plugins=(git ruby mvn gradle rbenv rake ant python rebar osx brew git-flow pip vagrant lein rebar sudo pyenv jenv zsh-syntax-highlighting)
 
 . $ZSH/oh-my-zsh.sh
 

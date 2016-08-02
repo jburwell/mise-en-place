@@ -4,9 +4,10 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - zsh
     - colordiff
     - z
+    - zsh
+    - zsh-syntax-highlighting
 
 - name: Add Homebrew's Zsh to available shells
   sudo: yes
@@ -16,27 +17,33 @@
 
 - name: Grab the oh-my-zsh directory stats
   stat:
-    path: "{{ zsh_on_my_zsh_home }}"
-  register: st
+    path: "{{ zsh_oh_my_zsh_home }}"
+  register: oh_my_zsh_st
 
 - name: Install oh-my-zsh
   git: 
-    repo: "https://github.com/robbyrussell/oh-my-zsh" 
-    dest: "{{ zsh_on_my_zsh_home }}"
-  when: not st.stat.exists
+    repo: "{{ zsh_oh_my_zsh_repo_url }}"
+    dest: "{{ zsh_oh_my_zsh_home }}"
+  when: not oh_my_zsh_st.stat.exists
 
-- name: Install Pygments for colorization
-  shell: eval $(pyenv init) && pip install Pygments
+- name: Grab the zsh-syntax-highlighting oh-my-zsh plugin directory stats
+  stat:
+    path: "{{ zsh_syntax_highlighting_plugin_home }}"
+  register: zsh_syntax_highlighting_plugin_st
 
-- name: Copy .zshrc to ~/
+- name: Install zsh-syntax-highlighting oh-my-zsh plugin
+  git: 
+    repo: "{{ zsh_syntax_highlighting_plugin_repo_url }}"
+    dest: "{{ zsh_syntax_highlighting_plugin_home }}"
+  when: not zsh_syntax_highlighting_plugin_st.stat.exists
+
+- name: Copy .profile and .zshrc to ~/
   copy: 
-    src: "zshrc"
-    dest: "~/.zshrc"
-
-- name: Copy .profile to ~/
-  copy:
-    src: "profile"
-    dest: "~/.profile"
+    src: "{{ item }}"
+    dest: "~/.{{ item }}"
+  with_items:
+    - profile
+    - zshrc
 
 - name: Check if Homebrew's Zsh is already the default shell (will require a restart)
   shell: echo $SHELL
