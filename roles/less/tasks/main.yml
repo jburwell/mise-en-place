@@ -1,0 +1,19 @@
+---
+- name: Install less and highlight
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - less
+    - lesspipe
+    - highlight
+
+- lineinfile:
+    dest: ~/.zshrc
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - export LESSOPEN="| $(which highlight) %s --out-format xterm256 --line-numbers --quiet --force --style solarized-dark"
+    - export LESS=" -R"
+    - alias less='less -m -N -g -i -J --line-numbers --underline-special'
+    - alias more='less'
