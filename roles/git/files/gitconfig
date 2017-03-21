@@ -6,11 +6,9 @@
 [github]
   user = jburwell
 [push]
-  default = simple
+	default = current
 [color]
   ui = true
-[push]
-  default = simple
 [core]
   excludesfile = ~/.gitignore
 [mergetool "Kaleidoscope"]
