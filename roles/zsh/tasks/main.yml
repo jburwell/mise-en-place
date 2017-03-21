@@ -44,6 +44,7 @@
   with_items:
     - profile
     - zshrc
+    - zshenv
 
 - name: Check if Homebrew's Zsh is already the default shell (will require a restart)
   shell: echo $SHELL
