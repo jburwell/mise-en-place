@@ -66,12 +66,7 @@ ZSH_TMUX_AUTOQUIT=false
 export VAGRANT_DEFAULT_PROVIDER=vmware_fusion
 export VAGRANT_VMWARE_FUSION_APP="/opt/homebrew-cask/Caskroom/vmware-fusion/8.1.1-3771013/VMware Fusion.app"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git ruby mvn gradle rbenv rake ant python rebar osx brew pip vagrant lein rebar sudo pyenv jenv zsh-syntax-highlighting)
-
-echo "oh-my-zsh plugins: ${plugins}"
 
 . $ZSH/oh-my-zsh.sh
 

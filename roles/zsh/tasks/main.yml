@@ -5,6 +5,7 @@
     state: present
   with_items:
     - colordiff
+    - highlight
     - z
     - zsh
     - zsh-syntax-highlighting
