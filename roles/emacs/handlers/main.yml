@@ -1,0 +1,3 @@
+- name: restart emacs-plus server
+  shell: brew services start emacs-plus
+

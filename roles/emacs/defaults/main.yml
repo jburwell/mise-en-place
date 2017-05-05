@@ -1,2 +1,3 @@
 ---
 emacs_conf_dir: ~/.emacs.d
+spacemacs_version: v0.200.9
