@@ -1,8 +1,4 @@
 ---
-- name: Install system-wide pip
-  shell: easy_install pip
-  sudo: true
-
 - name: Install pyenv and pyenv-virtualenv
   homebrew: name={{ item }} state=present
   with_items:
@@ -11,15 +7,25 @@
     - "homebrew/boneyard/pyenv-pip-rehash"
 
 - name: Install the latest Python 2.6.x, 2.7.x, and 3.x.x into pyenv
-  shell: eval $(pyenv init) && pyenv install {{ item }}
+  shell: pyenv install {{ item }}
   with_items:
     - "2.6.8"
-    - "2.7.10"
+    - "2.7.11"
     - "3.4.3"
+
+- name: Force rehash of the pyenv shims
+  shell: pyenv rehash
+
+- name: Set the default pyenv Python version
+  lineinfile:
+    dest: "~/.python-version"
+    line: "2.7.11"
+
+- name: Upgrade pip
+  shell: eval $(pyenv init) && pip install pip --upgrade
 
 - name: Install Python tools (autopep8, pep8, ipython, etc)
   shell: eval $(pyenv init) && pip install {{ item }}
-  sudo: true
   with_items:
     - "autopep8"
     - "pep8"
