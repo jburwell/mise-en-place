@@ -16,15 +16,18 @@
     - { role: alfred, sudo: yes }
     - { role: comms, sudo: yes}
     - { role: keychain }
+    - { role: zsh }
     - { role: iterm2 }
     - { role: tmux }
     - { role: git }
-    - { role: java }
-#    - { role: python }
-    - { role: dash }
-    - { role: zsh }
     - { role: vim }
     - { role: emacs }
+    - { role: java }
+    - { role: clojure }
+    - { role: less }
+#    - { role: erlang }
+    - { role: python }
+    - { role: dash }
     - { role: vmware-fusion }
     - { role: vagrant }
     - { role: evernote }
