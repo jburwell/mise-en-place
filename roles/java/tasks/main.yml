@@ -1,5 +1,5 @@
 ---
-- name: Install Java6, Java7, and Java8
+- name: Install Java6, Java7, Java8, IntelliJ, and Java Decompiler
   homebrew_cask:
     name: "{{ item }}"
     state: present
@@ -8,6 +8,8 @@
     - java6
     - java7
     - java
+    - intellij-idea-ce
+    - jd-gui
 
 - name: Install jenv, Gradle, and Maven
   homebrew:
@@ -17,6 +19,7 @@
     - jenv
     - gradle
     - maven
+    - javarepl
 
 - name: Create .gradle directory
   file: 
@@ -29,13 +32,4 @@
     line: org.gradle.daemon=true
     create: true
     state: present
-
-- name: Install IntelliJ and Java Decompiler
-  homebrew_cask:
-    name: "{{ item }}"
-    state: present
-  sudo: true
-  with_items:
-    - intellij-idea-ce
-    - jd-gui
 
