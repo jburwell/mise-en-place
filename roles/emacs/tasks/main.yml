@@ -16,14 +16,30 @@
   notify:
     - restart emacs-plus server
 
-- name: Install Cask + node and npm dependencies for Markdown live prevew
+- name: Install Cask + node and npm dependencies for Markdown live prevew + ispell
   homebrew:
-    name: cask
+    name: "{{ item }}"
     state: present
   with_items:
     - cask
+    - coreutils
+    - ispell
     - node
     - npm
+
+- name: Install vmd for Markdown live preview
+  npm:
+    name: vmd
+    global: true
+
+- name: Install SCSS-Lint dependencies for the HTML layer
+  gem:
+    name: "{{ item.name }}"
+    version: "{{ item.version }}"
+    state: present
+  with_items:
+    - { name: scss_lint, version: "~> 0.43.0" }
+    - { name: scss_lint_reporter_checkstyle, version: "" }
 
 - name: Create the ~/.emacs.d  directory
   file:
@@ -44,11 +60,6 @@
     dest: ~/.spacemacs
   notify:
     - restart emacs-plus server
-
-- name: Install vmd for Markdown live preview
-  npm:
-    name: vmd
-    global: true
 
 - name: Install Python anaconda, syntax checking, linting, and hy-mode dependencies
   pip:

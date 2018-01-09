@@ -27,6 +27,7 @@ values."
      better-defaults
      colors
      clojure
+     ;; TODO templatize for zeal on Linux
      dash
      erlang
      elixir
@@ -40,14 +41,18 @@ values."
      osx
      ; perspectives
      (python :variables
-             python-enable-yapf-format-on-save t
-             python-sort-imports-on-save t)
-     ;; org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+              python-enable-yapf-format-on-save t
+              python-sort-imports-on-save t)
+     (org :variables
+              org-enable-github-support t
+              org-projectile-file "TODOs.org")
+     (shell :variables
+              shell-default-height 30
+              shell-default-position 'bottom
+              ;; TODO templatize this value per platform
+              shell-default-term-shell "~/.homebrew/bin/zsh" )
      shell-scripts
-     ;; spell-checking
+     (spell-checking :variables enable-flyspell-auto-completion t)
      (ruby :variables ruby-version-manager 'rbenv)
      syntax-checking
      themes-megapack
@@ -291,3 +296,7 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(with-eval-after-load 'org-agenda
+  (require 'org-projectile)
+  (push (org-projectile:todo-files) org-agenda-files))
