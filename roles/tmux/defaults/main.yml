@@ -1,7 +1,8 @@
 ---
-tmux_root_dir: ~/.tmux
+tmux_root_dir: "/home/{{ ansible_ssh_user }}/.tmux"
 tmux_plugin_dir: "{{ tmux_root_dir}}/plugins"
 tmux_tpm_dir: "{{ tmux_plugin_dir }}/tpm"
+tmux_laptop: true
 
 tmux_plugins:
   - tmux-plugins/tpm

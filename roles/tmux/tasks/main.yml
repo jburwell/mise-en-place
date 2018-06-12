@@ -1,9 +1,14 @@
 ---
 - name: Install tmux and associated utilities from Homebrew
-  homebrew: name={{ item }} state=present
-  with_items:
-    - "tmux"
-    - "reattach-to-user-namespace"
+  package:
+    name: tmux
+    state: present
+
+- name: Install Mac clipboard integration
+  package:
+    name: reattach-to-user-namespace
+    state: present
+  when: amsible_os_family == "Darwin"
 
 - name: Create the tmux plugin directory
   file:
@@ -24,7 +29,7 @@
 - name: Copy tmux.conf into ~/
   template:
     src: tmux.conf.j2
-    dest: ~/.tmux.conf
+    dest: "/home/{{ ansible_ssh_user }}/.tmux.conf"
 
 - name: Install tmux plugins
   shell: "{{ tmux_tpm_dir}}/bin/install_plugins"
