@@ -12,8 +12,6 @@ set -g base-index 1
 # Automatically set window title
 set-window-option -g automatic-rename on
 set-option -g set-titles on
-# Mac specific for clipboard integration -- http://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
-set-option -g default-command "reattach-to-user-namespace -l zsh"
 
 set -g default-terminal "screen-256color"
 set -g status-keys vi
@@ -37,17 +35,19 @@ bind-key M-k resize-pane -U
 bind-key M-h resize-pane -L
 bind-key M-l resize-pane -R
 
-# Mac clipboard integration -- http://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
 # Setup 'v' to begin selection as in Vim
-bind-key -t vi-copy v begin-selection
-bind-key -t vi-copy y copy-pipe "reattach-to-user-namespace pbcopy"
+bind-key -T copy-mode-vi v send-keys -X begin-selection
 
 # Update default binding of `Enter` to also use copy-pipe
-unbind -t vi-copy Enter
-bind-key -t vi-copy Enter copy-pipe "reattach-to-user-namespace pbcopy"
+unbind-key -T copy-mode-vi Enter
 
-# Bind ']' to use pbpaste
+# Mac clipboard integration -- http://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
+{% if ansible_os_family == "Darwin" %}
+set-option -g default-command "reattach-to-user-namespace -l zsh"
+bind-key -T copy-mode-vi y send-keys -X copy-pipe "reattach-to-user-namespace pbcopy"
+bind-key -T copy-mode-vi Enter send-keys -X copy-pipe "reattach-to-user-namespace pbcopy"
 bind ] run "reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"
+{% endif %}
 
 # Vim style pane selection
 bind h select-pane -L
@@ -113,7 +113,11 @@ set-option -g display-panes-colour brightred #orange
 # clock
 #set-window-option -g clock-mode-colour green #green
 
-set -g status-right 'Batt: #{battery_icon} #{battery_percentage} (#{battery_remain}) | %d.%h.%y | %H:%M '
+{% if tmux_laptop %}
+set -g status-right '#{battery_icon} #{battery_percentage} (#{battery_remain}) | %d.%h.%y | %H:%M '
+{% else %}
+set -g status-right '%d.%h.%y | %H:%M '
+{% endif %}
 
 {% for plugin in tmux_plugins %}
 set -g @plugin '{{ plugin }}'
