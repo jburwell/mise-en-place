@@ -1,0 +1,33 @@
+---
+- hosts: all
+  vars:
+    tmp_dir: ~/tmp
+ 
+  pre_tasks:
+    - file:
+        path: "{{ tmp_dir }}"
+        state: directory
+        mode: 0700
+    - file: 
+        path: ~/.ssh
+        state: directory
+        mode: 0700
+    - file:
+        path: ~/documents
+        state: directory
+        mode: 0700
+    - file:
+        path: ~/downloads
+        state: directory
+        mode: 0700
+    - file:
+        path: ~/projects
+        state: directory
+        mode: 0700
+ 
+  roles:
+    # - { role: zsh }
+    - { role: tmux }
+    # - { role: git }
+    # - { role: vim }
+    # - { role: tools }
