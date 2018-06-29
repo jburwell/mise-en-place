@@ -5,8 +5,7 @@ INITIAL_DIR="$(pwd)"
 # Bail on error ...
 set -e
 
-# TODO Add command line options for the mis-en-place repo URL, mis-en-place home directory, Homebrew home directory, Ruby version, and repo branch
-
+# TODO only prompt if the SUDO_PASSWORD environment variable is not set or it is not passed through a temp file
 echo -n "Sudo password: "
 read -s SUDO_PASSWORD
 echo
@@ -19,17 +18,27 @@ PYTHON_VERSION="system"
 
 OPTIND=1
 
-while getopts "hd" opt; do
+while getopts "b:dhp:r:" opt; do
   case "$opt" in
-    h)
-      show_help
-      exit 0
+    b)
+      MISE_BRANCH="$OPTARG"
       ;;
     d)
       echo "Debug mode enabled"
       set -x
       ;;
-    *) 
+    h)
+      show_help
+      exit 0
+      ;;
+    p)
+      PYTHON_VERSION="$OPTARG"
+      ;;
+    r)
+      MISE_REPO="$OPTARG"
+      ;;
+    *)
+      echo "Unknown command line option: $opt" >&2
       show_help >&2
       exit 1
       ;;
@@ -40,11 +49,14 @@ shift "$((OPTIND-1))"
 
 show_help() {
 cat << EOF
-Usage: ${0##*/} [-hd]
-Bootstrap a mise-en-place Debian environment.
+Usage: ${0##*/} [-b branch name] [-dh] [-p python version] [-r repo_url]
+Bootstrap a mise-en-place Debian environment
 
-    -h   display this help and exit
-    -d   enable debug mode to output all shell script commands
+    -b    mise-en-place branch from which to operate (default: $MISE_BRANCH)
+    -d    enable debug mode to output all shell script commands
+    -h    display this help message and exit
+    -p    pyenv-compatible Python version for Ansible (default: $PYTHON_VERSION)
+    -r    the git URL of the mise-en-place repository (default: $MISE_REPO)
 EOF
 }
 
@@ -52,15 +64,24 @@ add_line_to_file() {
   local line="$1"
   local filename="$2"
 
+  if [ ! -e $filename ]; then
+    echo "Creating $filename with line $line"
+    echo "$line" > "$filename"
+  fi
+
   echo "Checking if $line is in $filename"
-  if [ ! $(grep -q $line $filename) ]; then
+  if ! $(grep -qx "$line" $filename > /dev/null); then
     echo "Adding $line to $filename"
     echo "$line" >> "$filename"
   fi
 }
 
+install_packages() {
+  echo "$SUDO_PASSWORD" | sudo -S apt-get -y install $* > /dev/null
+}
+
 install_bootstrap_packages() {
-  echo "$SUDO_PASSWORD" | sudo -S apt-get install curl git
+  install_packages curl git
 }
 
 clone_mise_repo() {
@@ -75,6 +96,8 @@ clone_mise_repo() {
 
 install_python_and_mise_dependencies() {
   local pyenv_home="$HOME/.pyenv"
+  local bash_profile_path="$HOME/.bash_profile"
+
   echo "Checking that pyenv is installed in $pyenv_home"
   if [ ! -d "$pyenv_home" ]; then
     echo "Installing pyenv into $pyenv_home"
@@ -83,7 +106,7 @@ install_python_and_mise_dependencies() {
 
   local pyenv_bin_dir="$pyenv_home/bin"
   echo "Checking that $pyenv_bin_dir is in the PATH"
-  if [ ! $(echo "$PATH" | grep -q "$pyenv_bin_dir") ]; then
+  if [ ! $(echo "$PATH" | grep -q "$pyenv_bin_dir" > /dev/null) ]; then
     echo "Adding $pyenv_home to the beginning of the PATH"
     PATH="$pyenv_bin_dir:$PATH"
   fi
@@ -95,34 +118,43 @@ install_python_and_mise_dependencies() {
     git clone https://github.com/pyenv/pyenv-virtualenv.git "$pyenv_virtualenv_root"
   fi
 
-  add_line_to_file "export PYENV_ROOT=$pyenv_home" $HOME/.bash_profile
-  add_line_to_file 'export PATH="$PYENV_ROOT/bin:$PATH"' $HOME/.bash_profile
-  add_line_to_file "$(pyenv init -)" $HOME/.bash_profile
-  add_line_to_file "$(pyenv virtualenv-init -)" $HOME/.bash_profile
+  echo "Adding pyenv configuration to $bash_profile_path"
+  add_line_to_file "export PYENV_ROOT=$pyenv_home" $bash_profile_path
+  add_line_to_file 'export PATH="$PYENV_ROOT/bin:$PATH"' $bash_profile_path
+  add_line_to_file "pyenv init -" $bash_profile_path
+  add_line_to_file "pyenv virtualenv-init -" $bash_profile_path
 
-  echo "Checking for Python $PYTHON_VERSION installed into pyenv"
-  if [ ! $(pyenv versions | grep -q "$PYTHON_VERSION") ]; then
+  echo "Loading $bash_profile_path into the current shell"
+  source $bash_profile_path > /dev/null
+
+  echo "Checking for Python version $PYTHON_VERSION installed into pyenv"
+  if ! $(pyenv versions | grep -q "$PYTHON_VERSION" > /dev/null); then
     if [ "$PYTHON_VERSION" != "system" ]; then
-      echo "$SUDO_PASSWORD" | sudo -S apt-get install build-essential libbz2-dev libreadline-dev libssl-dev
+      echo "Installing dependencies required by python build"	
+      install_packages build-essential libbz2-dev libreadline-dev libssl-dev
       pyenv install -v "$PYTHON_VERSION"
       pyenv rehash
     fi
   fi
   
   if [ "$PYTHON_VERSION" == "system" ]; then
-    echo "$SUDO_PASSWORD" | sudo -S apt-get install python-pip virtualenv
+    install_packages python-pip virtualenv
   fi
 
   local env_name="mise"
   add_line_to_file $env_name "$MISE_HOME/.python-version"
   echo "Checking that the $env_name pyenv has been created"
-  if [ ! $(pyenv virtualenvs | grep -q $env_name) ]; then
+  if ! $(pyenv virtualenvs | grep -q $env_name > /dev/null); then
     pyenv virtualenv $PYTHON_VERSION $env_name
     pyenv rehash
   fi
 
   cd "$MISE_HOME"
-  pip install --upgrade pip
+  if [ "$PYTHON_VERSION" != "system" ]; then
+    echo "Upgrading pip"
+    pip install --upgrade pip
+  fi
+  echo "Installing mise Python requirements"
   pip install -r requirements.txt
 }
 

@@ -2,10 +2,11 @@
 # vi: set ft=ruby :
 
 $script = <<-EOF
-  cd /root
-  ln -s /vagrant ./.mise
-  cd .mise
-  ./bootstrap-debian.sh
+  MISE_HOME="$HOME/.mise"
+
+  ln -s /vagrant "$MISE_HOME"
+  cd "$MISE_HOME"
+  ./bootstrap-debian.sh -d
 EOF
 
 Vagrant.configure("2") do |config|
