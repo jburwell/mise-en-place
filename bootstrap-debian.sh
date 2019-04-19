@@ -76,8 +76,12 @@ add_line_to_file() {
   fi
 }
 
+execute_with_sudo() {
+  echo "$sudo_password" | $* > /dev/null
+}
+
 install_packages() {
-  echo "$SUDO_PASSWORD" | sudo -S apt-get -y install $* > /dev/null
+  execute_with_sudo "apt-get -y install $*"
 }
 
 install_bootstrap_packages() {
@@ -152,10 +156,10 @@ install_python_and_mise_dependencies() {
   cd "$MISE_HOME"
   if [ "$PYTHON_VERSION" != "system" ]; then
     echo "Upgrading pip"
-    pip install --upgrade pip
+    execute_with_sudo "pip install --upgrade pip"
   fi
   echo "Installing mise Python requirements"
-  pip install -r requirements.txt
+  pip install --user -r requirements.txt
 }
 
 install_bootstrap_packages
