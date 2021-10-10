@@ -1,0 +1,17 @@
+---
+- name: Install dmd
+  homebrew:
+    name: dmd
+    state: installed
+
+- name: Install dub (devel version)
+  homebrew:
+    name: dub
+    state: installed
+    install_options: "devel"
+
+- name: Install erln8
+  homebrew:
+    name: "https://raw.githubusercontent.com/erln8/homebrew/erln8_v2/Library/Formula/erln8.rb"
+    state: installed
+

@@ -12,7 +12,12 @@
   homebrew:
     name: emacs-plus
     state: linked
-    install_options: with-cocoa, with-gnutls, with-librsvg, with-imagemagick, with-spacemacs-icon
+    install_options:
+      - with-cocoa
+      - with-gnutls
+      - with-librsvg
+      - with-imagemagick
+      - with-spacemacs-icon
   notify:
     - restart emacs-plus server
 
@@ -54,6 +59,26 @@
   notify:
     - restart emacs-plus server
 
+- name: Check that GTD remote repo is registered
+  shell: "git remote | grep {{ git_layer_remote_name }}"
+    chdir: "{{ emacs_conf_dir }}"
+  register: gtd_remote_added
+  ignore_errors: true
+
+- name: Add Spacemacs GTD layer repo as a remote
+  shell: "git remote add -f {{ gtd_remote_name }} {{ gtd_layer_repo_url }}"
+    chdir: "{{ emacs_conf_dir }}"
+  when: gtd_remote_added is false
+
+- name: Check that GTD layer repo subtree has been created 
+  stat:
+    path: "{{ gtd_layer_dir }}"
+  register: gtd_layer_subtree_created
+
+- name: Create GTD layer repo subtree
+  shell: "git subtree add --prefix {{ gtd_layer_dir }} {{ gtd_layer_remote_name }} master --squash"
+  when: gtd_layer_subtree_created is false
+
 - name: Copy spacemacs configuration into home directory
   copy:
     src: spacemacs
@@ -79,5 +104,4 @@
   copy:
     src: lein-profile.clj
     dest: ~/.lein/profiles.clj
-
 

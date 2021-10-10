@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+
+import logging
+import os
+
+from collections import namedtuple
+from json import dumps
+from shutil import rmtree
+from sys import exit
+
+from ansible.constants import DEFAULT_LOCAL_TMP
+from ansible.parsing.dataloader import DataLoader
+from ansible.vars.manager import VariableManager
+from ansible.inventory.manager import InventoryManager
+from ansible.playbook.play import Play
+from ansible.executor.task_queue_manager import TaskQueueManager
+from ansible.plugins.callback import CallbackBase
+
+Options = namedtuple("Options", ["connection", \
+                                 "module_path", \
+                                 "forks", \
+                                 "become", \
+                                 "become_method", \
+                                 "become_user", \
+                                 "check", \
+                                 "diff"])
+DEFAULT_OPTIONS = Options(connection="local", \
+                          module_path=os.path.join(os.path.dirname(__file__), "roles"), \
+                          forks=10, \
+                          become=True, \
+                          become_method="sudo", \
+                          become_user="root", \
+                          check=False, \
+                          diff=False)
+PlaySource = namedtuple("PlaySource", ["name",
+                                       "hosts",
+                                       "gather_facts",
+                                       "tasks"])
+
+LOGGER = logging.getLogger(__name__)
+
+
+class ResultCallback(CallbackBase):
+    def v2_runner_on_ok(self, result, **kwargs):
+        host = result._host
+        # print(dumps({host.name: result._result}, indent=4))
+
+
+def configure_logging(level):
+    # TODO Add file logging ...
+    LOGGER.setLevel(level)
+
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(level)
+
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+
+    LOGGER.addHandler(console_handler)
+
+def create_loader():
+    return DataLoader()
+
+
+def create_inventory_manager(loader, host):
+    return InventoryManager(loader=loader, sources=host + ",")
+
+
+def create_variable_manager(loader, inventory):
+    return VariableManager(loader, inventory)
+
+
+def configure_workstation(host, loader, passwords, inventory, variable_manager):
+    play_source = PlaySource(name="Configure Workstation",
+                             hosts=host,
+                             gather_facts=True,
+                             tasks=[ { "action": { "module": "tmux" } }])
+
+    play = Play().load(play_source._asdict(), variable_manager=variable_manager, loader=loader)
+
+    tqm = None
+    try:
+        LOGGER.info("Executing play %s", play)
+        tqm = TaskQueueManager(
+                inventory=inventory,
+                variable_manager=variable_manager,
+                loader=loader,
+                options=DEFAULT_OPTIONS,
+                passwords=passwords,
+                stdout_callback=ResultCallback())
+        result = tqm.run(play)
+    finally:
+        if tqm:
+            tqm.cleanup()
+        rmtree(DEFAULT_LOCAL_TMP, True)
+    pass
+
+
+def main():
+
+    configure_logging(logging.DEBUG)
+    
+    host = "localhost"
+    passwords = { }
+
+    loader = create_loader()
+    inventory = create_inventory_manager(loader, host)
+    variable_manager = create_variable_manager(loader, inventory)
+
+    configure_workstation(host, loader, passwords, inventory, variable_manager)
+
+    exit()
+
+
+if __name__ == "__main__":
+    exit(main())

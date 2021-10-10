@@ -1,0 +1,10 @@
+---
+- name: Install leiningen
+  homebrew:
+    name: leiningen
+    state: present
+
+- name: Install clojurescript
+  homebrew:
+    name: clojurescript
+    state: present

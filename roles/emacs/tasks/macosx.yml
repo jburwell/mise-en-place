@@ -1,0 +1,34 @@
+---
+- name: Tap emacs-plus
+  homebrew_tap:
+    tap: d12frosted/emacs-plus
+
+- name: Ensure Emacs is not installed
+  homebrew:
+    name: emacs
+    state: absent
+
+- name: Install emacs-plus
+  homebrew:
+    name: emacs-plus
+    state: linked
+    install_options:
+      - with-cocoa
+      - with-gnutls
+      - with-librsvg
+      - with-imagemagick
+      - with-spacemacs-icon
+  notify:
+    - restart emacs-plus server
+
+- name: Install Cask + node and npm dependencies for Markdown live prevew + ispell
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - cask
+    - coreutils
+    - ispell
+    - node
+    - npm
+

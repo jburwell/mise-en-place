@@ -1,0 +1,14 @@
+---
+- name: Install emacs, Source Code Pro,  and ispell
+  pacman:
+    name: emacs
+    state: present
+  with_items:
+    - emacs
+    - adobe-source-code-pro-fonts
+    - hunspell
+
+- name: Install cask
+  aurman:
+    name: cask
+    status: present

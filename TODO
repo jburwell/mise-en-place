@@ -1,0 +1,5 @@
+  1. Convert to using asdf to manage Python versions
+  1. Create the mise runner application in Python 3
+    1. Run all modules
+    1. Run a specific module
+  1. Unit tests for all modules on Mac OS x and Arch Linux

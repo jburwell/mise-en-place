@@ -1,72 +1,19 @@
-# BEGIN: Mac specific
-export HOMEBREW_HOME=$HOME/.homebrew
-export HOMEBREW_NO_ANALYTICS=1
+ulimit -n 10000
 
-#unalias run-help
-autoload run-help
-HELPDIR=$HOMEBREW_HOME/share/zsh/helpfiles
-# END: Mac specific
-
-# Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
 ZSH_THEME="robbyrussell"
-#ZSH_THEME="burwellian"
 
-# BEGIN: Mac specific
-export PATH=$HOMEBREW_HOME/bin:$HOMEBREW_HOME/sbin:$PATH:$HOME/bin
-export C_INCLUDE_PATH=$HOMEBREW_HOME/include
-export CPLUS_INCLUDE_PATH=$HOMEBREW_HOME/include
-# END: Mac specific
-
-# Default editor and pager configurations ...
-# TODO Switch to vim ...
-VIM=$(which vim)
-export EDITOR='$VIM -f'
-
-# Erlang configuration ...
-# Disabled for now due to ease use of the Basho custom erlang build ...
-# . /Users/jburwell/.kerl/runtimes/r16b01/activate
-export PATH=$HOME/bin/erlang-R16B02-basho7/bin:$PATH
-
-# Intellij configuration
-export IDEA_JDK="$(/usr/libexec/java_home -v 1.8)"
-
-# Ant configuration
-export ANT_HOME=$HOME/bin/ant
-export PATH=$PATH:$ANT_HOME/bin
-
-# Maven configuration
-export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=500m -Djava.net.preferIPv4Stack=true"
-
-# Git configuration
-# TODO Switch to Vim ...
-export GIT_EDITOR="$VIM -f -c 'startinsert'"
-
-# Alias definitions ...
-alias grep='grep --color=auto'
-# BEGIN: Mac specific
-alias ls='ls -G'
-alias ll='ls -alFG'
-# END: Mac specific
-alias diff='colordiff'
-
-# BEGIN: Mac specific
-ZSH_TMUX_ITERM2=true
-# END: Mac specific
 ZSH_TMUX_AUTOSTART=true
 ZSH_TMUX_AUTOSTART_ONCE=true
 ZSH_TMUX_AUTOCONNECT=true
 ZSH_TMUX_AUTOQUIT=false
 
-export VAGRANT_DEFAULT_PROVIDER=vmware_fusion
-export VAGRANT_VMWARE_FUSION_APP="/opt/homebrew-cask/Caskroom/vmware-fusion/8.1.1-3771013/VMware Fusion.app"
+plugins=(asdf git mvn gradle vagrant lein pip python pyenv rake rbenv rebar ruby sudo zsh-syntax-highlighting aws)
 
-plugins=(git ruby mvn gradle rbenv rake ant python rebar osx brew pip vagrant lein rebar sudo pyenv jenv zsh-syntax-highlighting)
+for file in $HOME/.zsh.d/*.sh
+do
+  source $file
+done
 
 . $ZSH/oh-my-zsh.sh
 

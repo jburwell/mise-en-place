@@ -1,3 +1,10 @@
 ---
 emacs_conf_dir: ~/.emacs.d
-spacemacs_version: v0.200.9
+spacemacs_version: v0.200.13
+
+spacemacs_private_dir: "{{ emacs_conf_dir }}/private"
+spacemacs_private_layers_dir: "{{ spacemacs_private_dir }}/local"
+
+gtd_layer_repo_url: https://github.com/et2010/org-gtd.git
+gtd_layer_remote_name: gtd-layer-repo
+gtd_layer_dir: "{{ spacemacs_private_layers_dir }}/gtd"
