@@ -2,7 +2,7 @@
 ansible==4.6.0
 ansible-core==2.11.5
 cffi==1.14.6
-cryptography==3.3.2
+cryptography==39.0.1
 enum34==1.1.10
 ipaddress==1.0.23
 Jinja2==2.11.3
