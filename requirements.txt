@@ -13,4 +13,4 @@ pyparsing==2.4.7
 PyYAML==5.4.1
 resolvelib==0.5.4
 six==1.16.0
-virtualenv==15.2.0
+virtualenv==20.26.6
